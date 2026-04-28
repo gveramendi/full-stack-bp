@@ -1,0 +1,148 @@
+databaseChangeLog:
+  # Seed data taken from docs/images/. Only runs when context "seed" is active
+  # (configured in application.properties via spring.liquibase.contexts=seed).
+  # Tests do not activate this context, so the seed is skipped during testing.
+
+  - changeSet:
+      id: 002-seed-clients
+      author: bp-team
+      context: seed
+      changes:
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: client_id, value: jlema }
+              - column: { name: name, value: Jose Lema }
+              - column: { name: gender, value: MALE }
+              - column: { name: age, valueNumeric: 35 }
+              - column: { name: identification, value: '1700000001' }
+              - column: { name: address, value: Otavalo sn y principal }
+              - column: { name: phone, value: '098254785' }
+              - column: { name: password, value: '$2a$10$clJTNeMYFWoSzXi9FQ9dyeV9EfVFqwVjwmucJPNBKV5Xht85o4Q3m' }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: client_id, value: mmontalvo }
+              - column: { name: name, value: Marianela Montalvo }
+              - column: { name: gender, value: FEMALE }
+              - column: { name: age, valueNumeric: 32 }
+              - column: { name: identification, value: '1700000002' }
+              - column: { name: address, value: Amazonas y NNUU }
+              - column: { name: phone, value: '097548965' }
+              - column: { name: password, value: '$2a$10$l8hcEWSCN.hNWhY1oQQVTeuAmfk0cNvcGBcbNhiIXTkAkMRAAeea.' }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: client_id, value: josorio }
+              - column: { name: name, value: Juan Osorio }
+              - column: { name: gender, value: MALE }
+              - column: { name: age, valueNumeric: 40 }
+              - column: { name: identification, value: '1700000003' }
+              - column: { name: address, value: 13 junio y Equinoccial }
+              - column: { name: phone, value: '098874587' }
+              - column: { name: password, value: '$2a$10$ug0SMm0P.WHfhnlRTim0Jur70QK35D5qtY0Bzn5TtRWQnFHLDFOHa' }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+
+  - changeSet:
+      id: 002-seed-accounts
+      author: bp-team
+      context: seed
+      changes:
+        # Account 478758 — Jose Lema, SAVINGS, initial 2000, after retiro 575 → 1425
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: account_number, value: '478758' }
+              - column: { name: account_type, value: SAVINGS }
+              - column: { name: initial_balance, valueNumeric: 2000.00 }
+              - column: { name: current_balance, valueNumeric: 1425.00 }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: client_id, value: jlema }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        # Account 225487 — Marianela, CHECKING, initial 100, after deposito 600 → 700
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: account_number, value: '225487' }
+              - column: { name: account_type, value: CHECKING }
+              - column: { name: initial_balance, valueNumeric: 100.00 }
+              - column: { name: current_balance, valueNumeric: 700.00 }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: client_id, value: mmontalvo }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        # Account 495878 — Juan Osorio, SAVINGS, initial 0, after deposito 150 → 150
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: account_number, value: '495878' }
+              - column: { name: account_type, value: SAVINGS }
+              - column: { name: initial_balance, valueNumeric: 0.00 }
+              - column: { name: current_balance, valueNumeric: 150.00 }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: client_id, value: josorio }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        # Account 496825 — Marianela, SAVINGS, initial 540, after retiro 540 → 0
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: account_number, value: '496825' }
+              - column: { name: account_type, value: SAVINGS }
+              - column: { name: initial_balance, valueNumeric: 540.00 }
+              - column: { name: current_balance, valueNumeric: 0.00 }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: client_id, value: mmontalvo }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+        # Account 585545 — Jose Lema, CHECKING, initial 1000 (no movement)
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: account_number, value: '585545' }
+              - column: { name: account_type, value: CHECKING }
+              - column: { name: initial_balance, valueNumeric: 1000.00 }
+              - column: { name: current_balance, valueNumeric: 1000.00 }
+              - column: { name: status, value: ACTIVE }
+              - column: { name: client_id, value: jlema }
+              - column: { name: created_at, valueComputed: NOW() }
+              - column: { name: updated_at, valueComputed: NOW() }
+
+  - changeSet:
+      id: 002-seed-movements
+      author: bp-team
+      context: seed
+      changes:
+        # Movement 1: Retiro 575 from 478758 (Jose Lema) → balance 1425
+        - sql:
+            sql: |
+              INSERT INTO movements (date, movement_type, movement_value, balance, account_id, created_at, updated_at)
+              SELECT NOW(), 'WITHDRAWAL', -575.00, 1425.00, id, NOW(), NOW()
+              FROM accounts WHERE account_number = '478758';
+        # Movement 2: Depósito 600 to 225487 (Marianela) → balance 700
+        - sql:
+            sql: |
+              INSERT INTO movements (date, movement_type, movement_value, balance, account_id, created_at, updated_at)
+              SELECT NOW(), 'DEPOSIT', 600.00, 700.00, id, NOW(), NOW()
+              FROM accounts WHERE account_number = '225487';
+        # Movement 3: Depósito 150 to 495878 (Juan) → balance 150
+        - sql:
+            sql: |
+              INSERT INTO movements (date, movement_type, movement_value, balance, account_id, created_at, updated_at)
+              SELECT NOW(), 'DEPOSIT', 150.00, 150.00, id, NOW(), NOW()
+              FROM accounts WHERE account_number = '495878';
+        # Movement 4: Retiro 540 from 496825 (Marianela) → balance 0
+        - sql:
+            sql: |
+              INSERT INTO movements (date, movement_type, movement_value, balance, account_id, created_at, updated_at)
+              SELECT NOW(), 'WITHDRAWAL', -540.00, 0.00, id, NOW(), NOW()
+              FROM accounts WHERE account_number = '496825';

@@ -1,0 +1,78 @@
+<app-page-header
+  title="Clients"
+  searchPlaceholder="Search clients"
+  newLabel="New"
+  [searchValue]="searchQuery()"
+  (searchChange)="searchQuery.set($event)"
+  (newClick)="onNew()"
+/>
+
+<div class="client-list__table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Client ID</th>
+        <th>Name</th>
+        <th>Identification</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (client of filteredClients(); track client.clientId) {
+        <tr>
+          <td>{{ client.clientId }}</td>
+          <td>{{ client.name }}</td>
+          <td>{{ client.identification }}</td>
+          <td>{{ client.gender }}</td>
+          <td>{{ client.age }}</td>
+          <td>{{ client.phone || '—' }}</td>
+          <td>
+            <span class="badge" [class]="'badge--' + client.status.toLowerCase()">
+              {{ client.status }}
+            </span>
+          </td>
+          <td>
+            <div class="data-table__actions">
+              <button class="btn btn--secondary" type="button" (click)="onEdit(client)">Edit</button>
+              <button class="btn btn--danger" type="button" (click)="onDelete(client)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="data-table__empty">
+            @if (loading()) { Loading... } @else { No clients found }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (formOpen()) {
+  <app-modal
+    [title]="editTarget() ? 'Edit client' : 'New client'"
+    (closed)="onCancel()"
+  >
+    <app-client-form
+      [client]="editTarget()"
+      [submitting]="submitting()"
+      (submitCreate)="onCreate($event)"
+      (submitUpdate)="onUpdate($event)"
+      (cancel)="onCancel()"
+    />
+  </app-modal>
+}
+
+@if (deleteTarget(); as target) {
+  <app-confirm-dialog
+    title="Delete client"
+    [message]="'Delete client ' + target.clientId + ' (' + target.name + ')? This cannot be undone.'"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+}

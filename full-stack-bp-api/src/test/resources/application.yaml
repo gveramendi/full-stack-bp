@@ -1,0 +1,23 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    url: "jdbc:h2:mem:bp-test;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DB_CLOSE_DELAY=-1"
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  # Hibernate validates the schema produced by Liquibase
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  # Liquibase runs schema only (no "seed" context) so each test starts with empty tables
+  liquibase:
+    contexts: ""
+
+app:
+  withdrawal:
+    daily-limit-usd: 1000

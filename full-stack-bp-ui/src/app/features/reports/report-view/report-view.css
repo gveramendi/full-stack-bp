@@ -1,0 +1,129 @@
+.report-filter {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: var(--space-4);
+  align-items: end;
+  margin-bottom: var(--space-6);
+}
+
+.report-filter__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.report__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.report__header h2 {
+  margin: 0 0 var(--space-1);
+}
+
+.report__meta {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.report__totals {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.report__totals > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: right;
+}
+
+.report__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+.report__value {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.report__value--credit {
+  color: var(--color-success);
+}
+
+.report__value--debit {
+  color: var(--color-error);
+}
+
+.report__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.report__empty {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.account-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.account-card__header {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.account-card__header h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 16px;
+}
+
+.account-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.account-card__summary strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .report-filter {
+    grid-template-columns: 1fr;
+  }
+  .report__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .report__totals {
+    justify-content: space-between;
+  }
+}

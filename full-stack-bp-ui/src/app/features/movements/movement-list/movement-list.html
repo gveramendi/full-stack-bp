@@ -1,0 +1,71 @@
+<app-page-header
+  title="Movements"
+  searchPlaceholder="Search movements"
+  newLabel="New"
+  [searchValue]="searchQuery()"
+  (searchChange)="searchQuery.set($event)"
+  (newClick)="onNew()"
+/>
+
+<div class="movement-list__table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Account</th>
+        <th>Type</th>
+        <th class="movement-list__num">Value</th>
+        <th class="movement-list__num">Balance</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of filteredMovements(); track m.id) {
+        <tr>
+          <td>{{ m.date | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ m.accountNumber }}</td>
+          <td>{{ m.movementType }}</td>
+          <td
+            class="movement-list__num"
+            [class.movement-list__credit]="m.value > 0"
+            [class.movement-list__debit]="m.value < 0"
+          >
+            {{ m.value | number: '1.2-2' }}
+          </td>
+          <td class="movement-list__num">{{ m.balance | number: '1.2-2' }}</td>
+          <td>
+            <div class="data-table__actions">
+              <button class="btn btn--danger" type="button" (click)="onDelete(m)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="data-table__empty">
+            @if (loading()) { Loading... } @else { No movements found }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (formOpen()) {
+  <app-modal title="New movement" (closed)="onCancel()">
+    <app-movement-form
+      [accounts]="accounts()"
+      [submitting]="submitting()"
+      (submit)="onSubmit($event)"
+      (cancel)="onCancel()"
+    />
+  </app-modal>
+}
+
+@if (deleteTarget(); as target) {
+  <app-confirm-dialog
+    title="Delete movement"
+    [message]="'Delete movement #' + target.id + ' on account ' + target.accountNumber + '? The account balance will not be recalculated.'"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+}

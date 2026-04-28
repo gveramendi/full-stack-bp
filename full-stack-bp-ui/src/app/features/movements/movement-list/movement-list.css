@@ -1,0 +1,20 @@
+.movement-list__table-wrap {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.movement-list__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.movement-list__credit {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.movement-list__debit {
+  color: var(--color-error);
+  font-weight: 600;
+}

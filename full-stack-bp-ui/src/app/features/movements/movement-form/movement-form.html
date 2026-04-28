@@ -1,0 +1,51 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="movement-form">
+  <div class="form-grid">
+    <div class="form-field form-field--wide" [class.form-field--invalid]="hasError('accountId')">
+      <label class="form-field__label" for="accountId">Account</label>
+      <select id="accountId" class="form-field__select" formControlName="accountId">
+        <option [ngValue]="0" disabled>Select an account</option>
+        @for (a of accounts(); track a.id) {
+          <option [ngValue]="a.id">
+            {{ a.accountNumber }} — {{ a.clientName }} (balance: {{ a.currentBalance }})
+          </option>
+        }
+      </select>
+      @if (hasError('accountId')) {
+        <span class="form-field__error">Account is required</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="movementType">Type</label>
+      <select id="movementType" class="form-field__select" formControlName="movementType">
+        @for (t of movementTypeOptions; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field" [class.form-field--invalid]="hasError('amount')">
+      <label class="form-field__label" for="amount">Amount</label>
+      <input
+        id="amount"
+        class="form-field__input"
+        type="number"
+        step="0.01"
+        min="0.01"
+        formControlName="amount"
+      />
+      @if (hasError('amount')) {
+        <span class="form-field__error">Amount must be greater than 0</span>
+      }
+    </div>
+  </div>
+
+  <div class="movement-form__actions">
+    <button type="button" class="btn btn--secondary" (click)="cancel.emit()" [disabled]="submitting()">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+      Register
+    </button>
+  </div>
+</form>

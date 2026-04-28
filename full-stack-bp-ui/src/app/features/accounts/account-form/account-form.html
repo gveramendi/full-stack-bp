@@ -1,0 +1,74 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="account-form">
+  <div class="form-grid">
+    <div class="form-field" [class.form-field--invalid]="hasError('accountNumber')">
+      <label class="form-field__label" for="accountNumber">Account number</label>
+      <input
+        id="accountNumber"
+        class="form-field__input"
+        type="text"
+        formControlName="accountNumber"
+      />
+      @if (hasError('accountNumber')) {
+        <span class="form-field__error">Account number is required</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="accountType">Account type</label>
+      <select id="accountType" class="form-field__select" formControlName="accountType">
+        @for (t of accountTypeOptions; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field" [class.form-field--invalid]="hasError('initialBalance')">
+      <label class="form-field__label" for="initialBalance">
+        @if (isEdit()) { Initial balance (read-only) } @else { Initial balance }
+      </label>
+      <input
+        id="initialBalance"
+        class="form-field__input"
+        type="number"
+        step="0.01"
+        formControlName="initialBalance"
+      />
+      @if (hasError('initialBalance')) {
+        <span class="form-field__error">Must be zero or greater</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="status">Status</label>
+      <select id="status" class="form-field__select" formControlName="status">
+        @for (s of statusOptions; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field form-field--wide" [class.form-field--invalid]="hasError('clientId')">
+      <label class="form-field__label" for="clientId">
+        @if (isEdit()) { Client (read-only) } @else { Client }
+      </label>
+      <select id="clientId" class="form-field__select" formControlName="clientId">
+        <option value="" disabled>Select a client</option>
+        @for (c of clients(); track c.clientId) {
+          <option [value]="c.clientId">{{ c.clientId }} — {{ c.name }}</option>
+        }
+      </select>
+      @if (hasError('clientId')) {
+        <span class="form-field__error">Client is required</span>
+      }
+    </div>
+  </div>
+
+  <div class="account-form__actions">
+    <button type="button" class="btn btn--secondary" (click)="cancel.emit()" [disabled]="submitting()">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn--primary" [disabled]="submitting()">
+      {{ isEdit() ? 'Save changes' : 'Create' }}
+    </button>
+  </div>
+</form>

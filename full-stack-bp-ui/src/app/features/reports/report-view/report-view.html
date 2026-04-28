@@ -1,0 +1,110 @@
+<h1>Reports</h1>
+
+<form [formGroup]="form" (ngSubmit)="onGenerate()" class="report-filter">
+  <div class="form-field">
+    <label class="form-field__label" for="clientId">Client</label>
+    <select id="clientId" class="form-field__select" formControlName="clientId">
+      <option value="" disabled>Select a client</option>
+      @for (c of clients(); track c.clientId) {
+        <option [value]="c.clientId">{{ c.clientId }} — {{ c.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-field">
+    <label class="form-field__label" for="from">From</label>
+    <input id="from" class="form-field__input" type="date" formControlName="from" />
+  </div>
+
+  <div class="form-field">
+    <label class="form-field__label" for="to">To</label>
+    <input id="to" class="form-field__input" type="date" formControlName="to" />
+  </div>
+
+  <div class="report-filter__actions">
+    <button type="submit" class="btn btn--primary" [disabled]="loading()">
+      @if (loading()) { Generating... } @else { Generate }
+    </button>
+    @if (report()?.pdfBase64) {
+      <button type="button" class="btn btn--secondary" (click)="onDownloadPdf()">
+        Download PDF
+      </button>
+    }
+  </div>
+</form>
+
+@if (report(); as r) {
+  <section class="report">
+    <header class="report__header">
+      <div>
+        <h2>{{ r.clientName }}</h2>
+        <p class="report__meta">
+          {{ r.clientId }} · {{ r.from | date: 'yyyy-MM-dd' }} → {{ r.to | date: 'yyyy-MM-dd' }}
+        </p>
+      </div>
+      <div class="report__totals">
+        <div>
+          <span class="report__label">Total credits</span>
+          <span class="report__value report__value--credit">
+            {{ r.totalCredits | number: '1.2-2' }}
+          </span>
+        </div>
+        <div>
+          <span class="report__label">Total debits</span>
+          <span class="report__value report__value--debit">
+            {{ r.totalDebits | number: '1.2-2' }}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    @if (r.accounts.length === 0) {
+      <div class="report__empty">No accounts for this client</div>
+    }
+
+    @for (account of r.accounts; track account.accountId) {
+      <article class="account-card">
+        <header class="account-card__header">
+          <h3>{{ account.accountNumber }} — {{ account.accountType }}</h3>
+          <div class="account-card__summary">
+            <span>Initial: <strong>{{ account.initialBalance | number: '1.2-2' }}</strong></span>
+            <span>Current: <strong>{{ account.currentBalance | number: '1.2-2' }}</strong></span>
+            <span>Credits: <strong class="report__value--credit">{{ account.totalCredits | number: '1.2-2' }}</strong></span>
+            <span>Debits: <strong class="report__value--debit">{{ account.totalDebits | number: '1.2-2' }}</strong></span>
+          </div>
+        </header>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th class="report__num">Value</th>
+              <th class="report__num">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of account.movements; track $index) {
+              <tr>
+                <td>{{ m.date | date: 'yyyy-MM-dd HH:mm' }}</td>
+                <td>{{ m.movementType }}</td>
+                <td
+                  class="report__num"
+                  [class.report__value--credit]="m.value > 0"
+                  [class.report__value--debit]="m.value < 0"
+                >
+                  {{ m.value | number: '1.2-2' }}
+                </td>
+                <td class="report__num">{{ m.balance | number: '1.2-2' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="data-table__empty">No movements in this period</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </article>
+    }
+  </section>
+}

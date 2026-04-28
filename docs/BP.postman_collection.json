@@ -1,0 +1,212 @@
+{
+  "info": {
+    "name": "BP Full Stack Exam",
+    "description": "Collection to verify the BP API endpoints (clients, accounts, movements, reports). Base URL is configurable via the {{baseUrl}} variable (default http://localhost:8080/api).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "clientId", "value": "C-001" },
+    { "key": "accountId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "List clients",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/clients"
+          }
+        },
+        {
+          "name": "Get client by id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/clients/{{clientId}}"
+          }
+        },
+        {
+          "name": "Create client",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/clients",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"C-100\",\n  \"name\": \"New Client\",\n  \"gender\": \"OTHER\",\n  \"age\": 28,\n  \"identification\": \"ID-NEW-100\",\n  \"address\": \"Test address\",\n  \"phone\": \"555-9999\",\n  \"password\": \"password\",\n  \"status\": \"ACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update client (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/clients/{{clientId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"555-0000\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Patch client (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/clients/{{clientId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete client",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/clients/C-100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "List accounts",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts"
+          }
+        },
+        {
+          "name": "List accounts by client",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts?clientId={{clientId}}"
+          }
+        },
+        {
+          "name": "Get account by id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/accounts/{{accountId}}"
+          }
+        },
+        {
+          "name": "Create account",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/accounts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountNumber\": \"ACC-NEW-001\",\n  \"accountType\": \"SAVINGS\",\n  \"initialBalance\": 1000.00,\n  \"status\": \"ACTIVE\",\n  \"clientId\": \"{{clientId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update account",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/accounts/{{accountId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete account",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/accounts/{{accountId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movements",
+      "item": [
+        {
+          "name": "List movements",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/movements"
+          }
+        },
+        {
+          "name": "List movements by account",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/movements?accountId={{accountId}}"
+          }
+        },
+        {
+          "name": "Create deposit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/movements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"movementType\": \"DEPOSIT\",\n  \"amount\": 200.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Create withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/movements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"movementType\": \"WITHDRAWAL\",\n  \"amount\": 50.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Withdrawal — insufficient balance (expected 422)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/movements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"movementType\": \"WITHDRAWAL\",\n  \"amount\": 999999.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Withdrawal — daily limit exceeded (expected 422 after totals exceed $1000)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/movements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": {{accountId}},\n  \"movementType\": \"WITHDRAWAL\",\n  \"amount\": 1100.00\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Account statement (JSON + base64 PDF)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/reports?clientId={{clientId}}&from=2026-01-01&to=2026-12-31"
+          }
+        }
+      ]
+    }
+  ]
+}

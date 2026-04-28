@@ -1,0 +1,8 @@
+<div class="notifications" role="status" aria-live="polite">
+  @for (n of notifier.notifications(); track n.id) {
+    <div class="notifications__item" [class]="'notifications__item--' + n.kind">
+      <span>{{ n.message }}</span>
+      <button class="notifications__close" type="button" (click)="notifier.dismiss(n.id)">×</button>
+    </div>
+  }
+</div>

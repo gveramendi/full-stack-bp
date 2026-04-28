@@ -1,0 +1,28 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java / Gradle
+full-stack-bp-api/build/
+full-stack-bp-api/.gradle/
+full-stack-bp-api/bin/
+full-stack-bp-api/out/
+!full-stack-bp-api/gradle/wrapper/gradle-wrapper.jar
+
+# Node / Angular
+full-stack-bp-ui/node_modules/
+full-stack-bp-ui/dist/
+full-stack-bp-ui/.angular/
+full-stack-bp-ui/coverage/
+full-stack-bp-ui/out-tsc/
+full-stack-bp-ui/*.log
+
+# Env
+.env
+.env.local

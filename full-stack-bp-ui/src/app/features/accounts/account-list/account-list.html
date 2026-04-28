@@ -1,0 +1,77 @@
+<app-page-header
+  title="Accounts"
+  searchPlaceholder="Search accounts"
+  newLabel="New"
+  [searchValue]="searchQuery()"
+  (searchChange)="searchQuery.set($event)"
+  (newClick)="onNew()"
+/>
+
+<div class="account-list__table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account #</th>
+        <th>Type</th>
+        <th>Initial</th>
+        <th>Current</th>
+        <th>Client</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (account of filteredAccounts(); track account.id) {
+        <tr>
+          <td>{{ account.accountNumber }}</td>
+          <td>{{ account.accountType }}</td>
+          <td>{{ account.initialBalance | number: '1.2-2' }}</td>
+          <td>{{ account.currentBalance | number: '1.2-2' }}</td>
+          <td>{{ account.clientName }} ({{ account.clientId }})</td>
+          <td>
+            <span class="badge" [class]="'badge--' + account.status.toLowerCase()">
+              {{ account.status }}
+            </span>
+          </td>
+          <td>
+            <div class="data-table__actions">
+              <button class="btn btn--secondary" type="button" (click)="onEdit(account)">Edit</button>
+              <button class="btn btn--danger" type="button" (click)="onDelete(account)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="data-table__empty">
+            @if (loading()) { Loading... } @else { No accounts found }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (formOpen()) {
+  <app-modal
+    [title]="editTarget() ? 'Edit account' : 'New account'"
+    (closed)="onCancel()"
+  >
+    <app-account-form
+      [account]="editTarget()"
+      [clients]="clients()"
+      [submitting]="submitting()"
+      (submitCreate)="onCreate($event)"
+      (submitUpdate)="onUpdate($event)"
+      (cancel)="onCancel()"
+    />
+  </app-modal>
+}
+
+@if (deleteTarget(); as target) {
+  <app-confirm-dialog
+    title="Delete account"
+    [message]="'Delete account ' + target.accountNumber + '? This cannot be undone.'"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+}

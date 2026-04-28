@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: full-stack-bp-api
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bp}
+    username: ${SPRING_DATASOURCE_USERNAME:bp}
+    password: ${SPRING_DATASOURCE_PASSWORD:bp}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA / Hibernate (schema is managed by Liquibase, Hibernate only validates)
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    contexts: ${LIQUIBASE_CONTEXTS:seed}
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
+app:
+  withdrawal:
+    daily-limit-usd: 1000
+  cors:
+    # comma-separated
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:4200}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
